@@ -1,0 +1,15 @@
+<launch>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description" command="cat $(find my_rb1_description)/urdf/my_rb1_robot.urdf" />
+
+  <!-- Run joint_state_publisher_gui node -->
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+
+  <!-- Run robot_state_publisher node -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Launch RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_rb1_description)/rviz/my_rb1_config.rviz" required="true" />
+
+</launch>
