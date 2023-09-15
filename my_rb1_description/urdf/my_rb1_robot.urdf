@@ -256,4 +256,24 @@
     </collision>
 </link>
 
+
+<gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <updateRate>100.0</updateRate>
+    <leftJoint>joint_chassis_left_wheel</leftJoint>
+    <rightJoint>joint_chassis_right_wheel</rightJoint>
+    <wheelSeparation>0.4</wheelSeparation> <!-- Assuming 0.2 (left) + 0.2 (right) = 0.4, adjust if needed -->
+    <wheelDiameter>0.05</wheelDiameter> <!-- 2 * wheel radius -->
+    <!-- Other necessary parameters, like PID values, robotNamespace, etc. can be added -->
+  </plugin>
+</gazebo>
+
+<!-- Laser Scanner Plugin -->
+<gazebo reference="link_front_laser">
+  <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+    <topicName>/scan</topicName>
+    <!-- Additional parameters like frameName, updateRate, etc. can be added if needed -->
+  </plugin>
+</gazebo>
+
 </robot>
