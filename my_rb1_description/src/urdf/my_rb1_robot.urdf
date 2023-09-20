@@ -1,11 +1,49 @@
 <?xml version="1.0"?>
+<?sdf version="1.6"?>
 <robot name="rb1">
 
- <!-- Base Footprint Link -->
+
+<gazebo reference="base_link">
+    <material>Gazebo/Blue</material>
+</gazebo>
+
+<gazebo reference="joint_chassis_front_caster_wheel">
+    <preserveFixedJoint>true</preserveFixedJoint>
+</gazebo>
+
+<gazebo reference="joint_chassis_back_caster_wheel">
+    <preserveFixedJoint>true</preserveFixedJoint>
+</gazebo>
+
+<gazebo reference="link_front_caster_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0</mu1>
+    <mu2>0</mu2>
+</gazebo>
+
+<gazebo reference="link_back_caster_wheel">
+    <material>Gazebo/Grey</material>
+    <mu1>0</mu1>
+    <mu2>0</mu2>
+</gazebo>
+
+<gazebo reference="link_right_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+</gazebo>
+
+<gazebo reference="link_left_wheel">
+    <material>Gazebo/Black</material>
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+</gazebo>
+
+<!-- Base Footprint at the bottom center of the base cylinder -->
 <link name="base_footprint">
     <visual>
         <geometry>
-            <cylinder length="0.01" radius="0.25"/>
+            <cylinder length="0.025" radius="0.25"/>
         </geometry>
     </visual>
 </link>
@@ -13,7 +51,7 @@
 <!-- Base Link -->
 <link name="base_link">
     <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/> <!-- Retained original position -->
+        <origin xyz="0 0 0" rpy="0 0 0"/> 
         <mass value="25"/>
         <inertia ixx="1.5625" ixy="0" ixz="0" iyy="1.5625" iyz="0" izz="2.08"/>
     </inertial>
@@ -29,13 +67,12 @@
     </collision>
 </link>
 
-<!-- Joints for Base Links -->
+<!-- Joint connecting base_footprint and base_link -->
 <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <origin xyz="0 0 0.15" rpy="0 0 0"/> <!-- Position the base_link 0.15 units above the base_footprint in the z-axis -->
+    <origin xyz="0 0 0.15" rpy="0 0 0"/> <!-- Positioned at the rotation axis -->
 </joint>
-
 
   <!-- Wheels Links -->
 
@@ -62,21 +99,18 @@
     <collision>
         <origin rpy="1.5707 0 0" xyz="0 0 0" />
         <geometry>
-            <cylinder length="0.0075" radius="0.025"/>
+            <cylinder length="0.075" radius="0.025"/>
         </geometry>
     </collision>
     <visual>
         <origin rpy="1.5707 0 0" xyz="0 0 0" />
         <geometry>
-            <cylinder length="0.0075" radius="0.025"/>
+            <cylinder length="0.075" radius="0.025"/>
         </geometry>
-        <material name="Black">
-            <color rgba="0.1 0.1 0.1 1" />
-        </material>
     </visual>
 </link>
 
-<!-- Joint - chassis / right wheel -->
+<!-- Joint - chassis / right wheel with corrected joint_properties -->
 <joint name="joint_chassis_right_wheel" type="continuous">
     <origin rpy="0 0 0" xyz="0.0 -0.2 -0.15" />
     <child link="link_right_wheel" />
@@ -98,17 +132,14 @@
     <collision>
         <origin rpy="1.5707 0 0" xyz="0 0 0" />
         <geometry>
-            <cylinder length="0.0075" radius="0.025"/>
+            <cylinder length="0.075" radius="0.025"/>
         </geometry>
     </collision>
     <visual>
         <origin rpy="1.5707 0 0" xyz="0 0 0" />
         <geometry>
-            <cylinder length="0.0075" radius="0.025"/>
+            <cylinder length="0.075" radius="0.025"/>
         </geometry>
-        <material name="Black">
-            <color rgba="0.1 0.1 0.1 1" />
-        </material>
     </visual>
 </link>
 
@@ -142,13 +173,13 @@
 
     <!-- Caster wheel support -->
     <collision>
-        <origin rpy="0 0 0" xyz="0 0 -0.00" />
+        <origin rpy="0 0 0" xyz="0 0 0.00" />
         <geometry>
             <sphere radius="0.025" />
         </geometry>
     </collision>
     <visual>
-        <origin rpy="0 0 0" xyz="0 0 -0.00" />
+        <origin rpy="0 0 0" xyz="0 0 0.00" />
         <geometry>
             <sphere radius="0.025" />
         </geometry>
@@ -219,21 +250,22 @@
 </link>
 
 <!-- Gazebo tags - Laser scan -->
-<gazebo reference="joint_front_laser_base">
+<gazebo reference="joint_laser_scan_chassis">
     <preserveFixedJoint>true</preserveFixedJoint>
 </gazebo>
-<gazebo reference="link_front_laser">
+<gazebo reference="link_laser_scan">
     <material>Gazebo/DarkGrey</material>
 </gazebo>
 
 <!-- Laser scan -->
-<joint name="joint_front_laser_base" type="fixed">
+<joint name="joint_laser_scan_chassis" type="fixed">
     <origin rpy="3.14159 0 0" xyz="0.25 0 0.075" /> <!-- Rotated 180 degrees in the x-axis -->
-    <child link="link_front_laser" />
+    <child link="link_laser_scan" />
     <parent link="base_link" />
     <joint_properties damping="1.0" friction="1.0" />
 </joint>
-<link name="link_front_laser">
+
+<link name="link_laser_scan">
     <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <mass value="0.5" />
@@ -257,23 +289,99 @@
 </link>
 
 
-<gazebo>
-  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
-    <updateRate>100.0</updateRate>
-    <leftJoint>joint_chassis_left_wheel</leftJoint>
-    <rightJoint>joint_chassis_right_wheel</rightJoint>
-    <wheelSeparation>0.4</wheelSeparation> <!-- Assuming 0.2 (left) + 0.2 (right) = 0.4, adjust if needed -->
-    <wheelDiameter>0.05</wheelDiameter> <!-- 2 * wheel radius -->
-    <!-- Other necessary parameters, like PID values, robotNamespace, etc. can be added -->
-  </plugin>
+<!-- Laser Scanner Plugin -->
+<gazebo reference="link_laser_scan">
+    <sensor type="ray" name="head_hokuyo_sensor">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>20</update_rate>
+        <ray>
+            <scan>
+                <horizontal>
+                    <samples>720</samples>
+                    <resolution>1</resolution>
+                    <min_angle>-1.570796</min_angle>
+                    <max_angle>1.570796</max_angle>
+                </horizontal>
+            </scan>
+            <range>
+                <min>0.020</min>
+                <max>10.0</max>
+                <resolution>0.01</resolution>
+            </range>
+            <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+            </noise>
+        </ray>
+        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+            <topicName>/scan</topicName>
+            <frameName>sensor_laser</frameName>
+        </plugin>
+    </sensor>
 </gazebo>
 
-<!-- Laser Scanner Plugin -->
-<gazebo reference="link_front_laser">
-  <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-    <topicName>/scan</topicName>
-    <!-- Additional parameters like frameName, updateRate, etc. can be added if needed -->
-  </plugin>
+
+<gazebo>
+    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+        <!-- Set the plugin to always be on -->
+        <alwaysOn>true</alwaysOn>
+        
+        <!-- Set the update rate to 20 Hz -->
+        <updateRate>20.0</updateRate>
+        
+        <!-- Specify the left and right wheel joints -->
+        <leftJoint>joint_chassis_left_wheel</leftJoint>
+        <rightJoint>joint_chassis_right_wheel</rightJoint>
+        
+        <!-- Specify the wheel separation and diameter -->
+        <wheelSeparation>0.4</wheelSeparation>
+        <wheelDiameter>0.05</wheelDiameter>
+        
+        <!-- Set the torque to 10 Nm -->
+        <torque>10</torque>
+        
+        <!-- Specify the command topic for velocity commands -->
+        <commandTopic>/cmd_vel</commandTopic>
+        
+        <!-- Specify the odometry topic -->
+        <odometryTopic>odom</odometryTopic>
+        
+        <!-- Specify the odometry frame -->
+        <odometryFrame>odom</odometryFrame>
+        
+        <!-- Specify the robot base frame -->
+        <robotBaseFrame>base_joint</robotBaseFrame>
+        
+        <!-- Set the ROS debug level to "na" -->
+        <rosDebugLevel>na</rosDebugLevel>
+        
+        <!-- Set the tf prefix to an empty string -->
+        <tf_prefix></tf_prefix>
+        
+        <!-- Disable publishing wheel TF -->
+        <publishWheelTF>false</publishWheelTF>
+        
+        <!-- Enable publishing odometry TF -->
+        <publishOdomTF>true</publishOdomTF>
+        
+        <!-- Disable publishing wheel joint state -->
+        <publishWheelJointState>false</publishWheelJointState>
+        
+        <!-- Set wheel acceleration to 0 -->
+        <wheelAcceleration>0</wheelAcceleration>
+        
+        <!-- Set wheel torque to 5 Nm -->
+        <wheelTorque>5</wheelTorque>
+        
+        <!-- Specify the odometry source as "world" -->
+        <odometrySource>world</odometrySource>
+        
+        <!-- Enable publishing TF -->
+        <publishTf>1</publishTf>
+    </plugin>
 </gazebo>
+
 
 </robot>
