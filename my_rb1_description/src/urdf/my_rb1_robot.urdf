@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
-<?sdf version="1.6"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <robot name="rb1">
 
 
 <gazebo reference="base_link">
-    <material>Gazebo/Blue</material>
+  <material>Gazebo/Black</material>
 </gazebo>
 
 <gazebo reference="joint_chassis_front_caster_wheel">
@@ -41,31 +40,35 @@
 
 <!-- Base Footprint at the bottom center of the base cylinder -->
 <link name="base_footprint">
-    <visual>
-        <geometry>
-            <cylinder length="0.025" radius="0.25"/>
-        </geometry>
-    </visual>
 </link>
 
 <!-- Base Link -->
+
 <link name="base_link">
-    <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/> 
-        <mass value="25"/>
-        <inertia ixx="1.5625" ixy="0" ixz="0" iyy="1.5625" iyz="0" izz="2.08"/>
-    </inertial>
-    <visual>
-        <geometry>
-            <cylinder length="0.3" radius="0.25"/>
-        </geometry>
-    </visual>
-    <collision>
-        <geometry>
-            <cylinder length="0.3" radius="0.25"/>
-        </geometry>
-    </collision>
-</link>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.30" radius="0.25"/>
+            </geometry>
+            <material name="Black">
+              <color rgba="0 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder length="0.30" radius="0.25"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="25"/>
+            <inertia ixx="1.5625" ixy="0" ixz="0" iyy="1.5625" iyz="0" izz="0.625"/>
+        </inertial>
+    </link>
+
+
+
 
 <!-- Joint connecting base_footprint and base_link -->
 <joint name="base_joint" type="fixed">
@@ -79,71 +82,71 @@
 
   <!-- Joint - chassis / left wheel -->
 <joint name="joint_chassis_left_wheel" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 0.2 -0.15" />
-    <child link="link_left_wheel" />
-    <parent link="base_link" />
-    <axis rpy="0 0 0" xyz="0 1 0" />
-    <limit effort="10000" velocity="1000" />
-    <joint_properties damping="1.0" friction="1.0" />
-</joint>
+        <parent link="base_link"/>
+        <child link="link_left_wheel"/>
+        <origin xyz="0 0.25 -0.15" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+    </joint>
 
 <!-- Link - left wheel -->
+
 <link name="link_left_wheel">
-    <inertial>
-        <mass value="1" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <inertia ixx="0.002526666666667" ixy="0" ixz="0" iyy="0.002526666666667" iyz="0" izz="0.005"/>
-    </inertial>
-    
-    <!-- Tires -->
-    <collision>
-        <origin rpy="1.5707 0 0" xyz="0 0 0" />
-        <geometry>
-            <cylinder length="0.075" radius="0.025"/>
-        </geometry>
-    </collision>
-    <visual>
-        <origin rpy="1.5707 0 0" xyz="0 0 0" />
-        <geometry>
-            <cylinder length="0.075" radius="0.025"/>
-        </geometry>
-    </visual>
-</link>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.0125" ixy="0" ixz="0" iyy="0.0125" iyz="0" izz="0.025"/>
+        </inertial>
+        <!-- Tires -->
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/> 
+            <geometry>
+                <cylinder length="0.03" radius="0.03125"/> <!-- radious a little bit bigger to preserve the radious of the caster wheels -->
+            </geometry>
+            <material name="Red">
+             <color rgba="1 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/> 
+            <geometry>
+                <cylinder length="0.03" radius="0.03125"/>
+            </geometry>
+        </collision>
+
+    </link>
 
 <!-- Joint - chassis / right wheel with corrected joint_properties -->
-<joint name="joint_chassis_right_wheel" type="continuous">
-    <origin rpy="0 0 0" xyz="0.0 -0.2 -0.15" />
-    <child link="link_right_wheel" />
-    <parent link="base_link" />
-    <axis rpy="0 0 0" xyz="0 1 0" />
-    <limit effort="10000" velocity="1000" />
-    <joint_properties damping="1.0" friction="1.0" />
-</joint>
+ <joint name="joint_chassis_right_wheel" type="continuous">
+        <parent link="base_link"/>
+        <child link="link_right_wheel"/>
+        <origin xyz="0 -0.25 -0.15" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+
+    </joint>
 
 <!-- Link - right wheel -->
-<link name="link_right_wheel">
-    <inertial>
-        <mass value="1" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <inertia ixx="0.002526666666667" ixy="0" ixz="0" iyy="0.002526666666667" iyz="0" izz="0.005"/>
-    </inertial>
-    
-    <!-- Tires -->
-    <collision>
-        <origin rpy="1.5707 0 0" xyz="0 0 0" />
-        <geometry>
-            <cylinder length="0.075" radius="0.025"/>
-        </geometry>
-    </collision>
-    <visual>
-        <origin rpy="1.5707 0 0" xyz="0 0 0" />
-        <geometry>
-            <cylinder length="0.075" radius="0.025"/>
-        </geometry>
-    </visual>
-</link>
 
-  
+ <link name="link_right_wheel">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.0125" ixy="0" ixz="0" iyy="0.0125" iyz="0" izz="0.025"/>
+        </inertial>
+        <!-- Tires -->
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/> 
+            <geometry>
+                <cylinder length="0.03" radius="0.03125"/>
+            </geometry>
+            <material name="Red"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/> 
+            <geometry>
+                <cylinder length="0.03" radius="0.03125"/>
+            </geometry>
+        </collision>
+    </link>
 
   <!-- Caster Links -->
 
@@ -152,15 +155,7 @@
     <origin rpy="0 0 0" xyz="-0.1 0 -0.15" />
     <child link="link_front_caster_wheel" />
     <parent link="base_link" />
-    <joint_properties damping="1.0" friction="0" />
-</joint>
-
-<!-- Back caster wheel joint -->
-<joint name="joint_chassis_back_caster_wheel" type="fixed">
-    <origin rpy="0 0 0" xyz="0.1 0 -0.15" />
-    <child link="link_back_caster_wheel" />
-    <parent link="base_link" />
-    <joint_properties damping="1.0" friction="0" />
+    <joint_properties damping="0.5" friction="0" />
 </joint>
 
 <!-- Front caster wheel link -->
@@ -188,7 +183,7 @@
         </material>
     </visual>
 
-    <!-- Caster wheel -->
+    <!-- Caster wheel -0.01875 -->
     <collision>
         <origin rpy="0 0 0" xyz="0 0 -0.01875" />
         <geometry>
@@ -205,6 +200,14 @@
         </material>
     </visual>
 </link>
+
+<!-- Back caster wheel joint -->
+<joint name="joint_chassis_back_caster_wheel" type="fixed">
+    <origin rpy="0 0 0" xyz="0.1 0 -0.15" />
+    <child link="link_back_caster_wheel" />
+    <parent link="base_link" />
+    <joint_properties damping="1.0" friction="0" />
+</joint>
 
 <!-- Back caster wheel link -->
 <link name="link_back_caster_wheel">
@@ -325,63 +328,44 @@
 
 <gazebo>
     <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-        <!-- Set the plugin to always be on -->
+        <!-- Always on -->
         <alwaysOn>true</alwaysOn>
-        
-        <!-- Set the update rate to 20 Hz -->
+
+        <!-- Update rate -->
         <updateRate>20.0</updateRate>
-        
-        <!-- Specify the left and right wheel joints -->
+
+        <!-- Left and Right Wheel Joints -->
         <leftJoint>joint_chassis_left_wheel</leftJoint>
         <rightJoint>joint_chassis_right_wheel</rightJoint>
-        
-        <!-- Specify the wheel separation and diameter -->
-        <wheelSeparation>0.4</wheelSeparation>
-        <wheelDiameter>0.05</wheelDiameter>
-        
-        <!-- Set the torque to 10 Nm -->
-        <torque>10</torque>
-        
-        <!-- Specify the command topic for velocity commands -->
-        <commandTopic>/cmd_vel</commandTopic>
-        
-        <!-- Specify the odometry topic -->
-        <odometryTopic>odom</odometryTopic>
-        
-        <!-- Specify the odometry frame -->
+
+        <!-- Wheel properties -->
+        <wheelSeparation>0.4</wheelSeparation>  <!-- This is an estimation. Adjust as per your design -->
+        <wheelDiameter>0.0625</wheelDiameter>     <!-- Diameter of the wheels -->
+
+        <!-- Speed Limits -->
+        <maxWheelTorque>20</maxWheelTorque>      <!-- Maximum torque the wheels can apply -->
+        <maxWheelAcceleration>5.0</maxWheelAcceleration>
+        <maxSpeed>1.0</maxSpeed>                 <!-- Maximum speed in m/s -->
+        <maxAngularSpeed>1.0</maxAngularSpeed>   <!-- Maximum rotational speed in rad/s -->
+
+        <!-- ROS Topics -->
+        <commandTopic>cmd_vel</commandTopic>     <!-- Topic to which the robot will listen for Twist messages -->
+        <odometryTopic>odom</odometryTopic>      <!-- Topic where the robot will publish its odometry -->
         <odometryFrame>odom</odometryFrame>
-        
-        <!-- Specify the robot base frame -->
-        <robotBaseFrame>base_joint</robotBaseFrame>
-        
-        <!-- Set the ROS debug level to "na" -->
-        <rosDebugLevel>na</rosDebugLevel>
-        
-        <!-- Set the tf prefix to an empty string -->
-        <tf_prefix></tf_prefix>
-        
-        <!-- Disable publishing wheel TF -->
-        <publishWheelTF>false</publishWheelTF>
-        
-        <!-- Enable publishing odometry TF -->
-        <publishOdomTF>true</publishOdomTF>
-        
-        <!-- Disable publishing wheel joint state -->
-        <publishWheelJointState>false</publishWheelJointState>
-        
-        <!-- Set wheel acceleration to 0 -->
-        <wheelAcceleration>0</wheelAcceleration>
-        
-        <!-- Set wheel torque to 5 Nm -->
-        <wheelTorque>5</wheelTorque>
-        
-        <!-- Specify the odometry source as "world" -->
-        <odometrySource>world</odometrySource>
-        
-        <!-- Enable publishing TF -->
-        <publishTf>1</publishTf>
+        <robotBaseFrame>base_link</robotBaseFrame>  <!-- Change this if you have a different base frame -->
+
+        <!-- Odometry Source -->
+        <odometrySource>world</odometrySource>   <!-- Use 'world' for Gazebo based odometry. Change to 'encoder' if you have encoders simulated -->
+
+        <!-- Other parameters (Optional) -->
+        <publishWheelTF>true</publishWheelTF>
+        <publishWheelJointState>true</publishWheelJointState>
+        <publishTf>true</publishTf>
+        <publishOdometryTf>true</publishOdometryTf>
+
     </plugin>
 </gazebo>
+
 
 
 </robot>

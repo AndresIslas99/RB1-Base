@@ -10,6 +10,6 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
   <!-- Launch RViz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_rb1_description)/rviz/my_rb1_config.rviz" required="true" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find my_rb1_description)/launch/RvizRB1config.rviz" required="true" />
 
 </launch>
