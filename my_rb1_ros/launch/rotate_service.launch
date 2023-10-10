@@ -1,0 +1,5 @@
+<launch>
+    <!-- Start Service Server for rotate_robot service -->
+    <node pkg="my_rb1_ros" type="rotate_service" name="rotate_service"  output="screen">
+    </node>
+</launch>
